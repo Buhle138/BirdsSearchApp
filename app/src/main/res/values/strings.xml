@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BirdsSearchApp</string>
+    <string name="google_map_api_key">AIzaSyCIQBiZ9ij3zI5c1AYZ-Qjg46Bfm8g-2dc</string>
 </resources>
