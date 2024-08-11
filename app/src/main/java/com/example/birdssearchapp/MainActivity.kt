@@ -25,8 +25,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         popupMenu.menuInflater.inflate(R.menu.map_options, popupMenu.menu )
 
+        popupMenu.setOnMenuItemClickListener {menuItem ->
+            changeMap(menuItem.itemId)
 
+            true
+        }
 
+        mapOptionButton.setOnClickListener {
+            popupMenu.show()
+        }
+
+    }
+
+    private fun changeMap(itemId: Int){
+        when(itemId) {
+            R.id.normal -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_NORMAL
+            R.id.hybrid -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
+            R.id.satellite -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+            R.id.terrain -> mGoogleMap?.mapType = GoogleMap.MAP_TYPE_TERRAIN
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
