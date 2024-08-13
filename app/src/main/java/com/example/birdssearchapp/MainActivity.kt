@@ -1,5 +1,6 @@
 package com.example.birdssearchapp
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +12,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
@@ -37,13 +41,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         autocompleteFragment.setOnPlaceSelectedListener(object :PlaceSelectionListener{
             override fun onError(p0: Status) {
                Toast.makeText(this@MainActivity, "Some Error in search ${p0}", Toast.LENGTH_SHORT).show()
-            Log.i("${p0}", "StatusSearch")
             }
 
             override fun onPlaceSelected(place: Place) {
-//               val add = place.address
-//                val id = place.id
+               val add = place.address
+                val id = place.id
                 val latlng = place.latLng!!
+                val marker = addMarker(latlng)
+                marker.title = "$add"
+                marker.snippet = "$id"
 
                 zoomOnMap(latlng)
             }
@@ -70,6 +76,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private  fun zoomOnMap(latLng: LatLng){
         val newLatLng = CameraUpdateFactory.newLatLngZoom(latLng, 12f)
             mGoogleMap?.animateCamera(newLatLng)
@@ -85,7 +92,49 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-
         mGoogleMap = googleMap
+
+
+        addMarker(LatLng(13.123, 12.123))
+
+        addGragabbleMarker(LatLng(12.456, 14.765))
+
+        mGoogleMap?.addMarker(MarkerOptions()
+            .position(LatLng(12.321, 13.432))
+            .title("Marker")
+        )
+
+        //Add draggable marker
+        mGoogleMap?.addMarker(MarkerOptions()
+            .position(LatLng(13.234, 12.543))
+            .title("Draggable Marker")
+            .draggable(true)
+        )
+
+        //custom markker
+//        mGoogleMap?.addMarker(MarkerOptions()
+//            .position(LatLng(12.987, 14.345))
+//            .title("Custom Marker")
+//            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
+//        )
+
     }
+    private fun addMarker(position: LatLng): Marker{
+      val marker =   mGoogleMap?.addMarker(MarkerOptions()
+            .position((position))
+            .title("Marker")
+        )
+
+        return marker!!
+    }
+
+    private fun addGragabbleMarker(position: LatLng){
+        mGoogleMap?.addMarker(MarkerOptions()
+            .position((position))
+            .title("Draggable Marker")
+        )
+    }
+
+
 }
+
