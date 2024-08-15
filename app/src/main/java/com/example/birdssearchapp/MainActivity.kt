@@ -13,9 +13,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CustomCap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.RoundCap
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
@@ -119,6 +122,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //        )
 
     }
+    @SuppressLint("SuspiciousIndentation")
     private fun addMarker(position: LatLng): Marker{
       val marker =   mGoogleMap?.addMarker(MarkerOptions()
             .position((position))
@@ -134,6 +138,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .title("Draggable Marker")
         )
     }
+
+
 
 
 }
