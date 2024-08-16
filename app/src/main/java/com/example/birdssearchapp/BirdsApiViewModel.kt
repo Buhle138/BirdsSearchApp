@@ -11,10 +11,10 @@ class BirdsApiViewModel: ViewModel() {
 
     val state = mutableStateOf(MyScreen())
 
-    public fun fetchBirds(){
+    public fun fetchBirds(latitudes: Double, longitudes: Double){
         viewModelScope.launch {
             try {
-                val birdsResponse = birdsResponse.searchRegion("ZA-EC")
+                val birdsResponse = birdsResponse.searchRegion(latitudes, longitudes)
                 state.value = state.value.copy(listOfBirds = birdsResponse)
                 Log.i("ListOfBirds", birdsResponse.toString())
             }catch (e: Exception){

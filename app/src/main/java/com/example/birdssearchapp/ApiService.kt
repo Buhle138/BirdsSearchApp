@@ -5,6 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 //Image generator image service
 private  val retrofitImage = Retrofit.Builder().baseUrl("https://api.ebird.org/v2/")
@@ -14,9 +15,27 @@ private  val retrofitImage = Retrofit.Builder().baseUrl("https://api.ebird.org/v
 val birdsResponse = retrofitImage.create(ImageApiService::class.java)
 
 interface ImageApiService{
+
+    //https://api.ebird.org/v2/data/obs/geo/recent?lat={{lat}}&lng={{lng}}
     @Headers("X-eBirdApiToken: gi422aer30qs")
-    @GET("data/obs/{region}/recent")
+    @GET("data/obs/geo/recent")
     suspend fun searchRegion(
-        @Path("region") region: String
+        @Query("lat") latitude: Double,
+        @Query("lng") longitude: Double
     ) : List<Root2>
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

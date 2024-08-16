@@ -7,6 +7,9 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -23,15 +26,25 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import okhttp3.OkHttpClient
+import java.security.Provider
 import kotlin.math.log
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
+
+
     private  var mGoogleMap: GoogleMap? = null
     private lateinit var autocompleteFragment:AutocompleteSupportFragment
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val viewModel = ViewModelProvider(this)[BirdsApiViewModel::class.java]
+
+
 
         Places.initialize(applicationContext,getString(R.string.google_map_api_key))
 
@@ -51,6 +64,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 val id = place.id
                 val latlng = place.latLng!!
                 val marker = addMarker(latlng)
+
+                place.latLng?.let { place.latLng?.let { it1 -> viewModel.fetchBirds(it.latitude, it1.longitude) } }
+
+                for(item in viewModel.state.value.listOfBirds){
+                    mGoogleMap?.addMarker(MarkerOptions()
+                    .position(LatLng(item.lat, item.lng))
+                    .title("Birds"))
+                }
+
                 marker.title = "$add"
                 marker.snippet = "$id"
 
@@ -78,6 +100,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
     }
+
 
     @SuppressLint("SuspiciousIndentation")
     private  fun zoomOnMap(latLng: LatLng){
