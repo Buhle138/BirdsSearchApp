@@ -60,18 +60,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
             override fun onPlaceSelected(place: Place) {
+                place.latLng?.let { place.latLng?.let { it1 -> viewModel.fetchBirds(it.latitude, it1.longitude) } }
+
+
+
                val add = place.address
                 val id = place.id
                 val latlng = place.latLng!!
                 val marker = addMarker(latlng)
 
-                place.latLng?.let { place.latLng?.let { it1 -> viewModel.fetchBirds(it.latitude, it1.longitude) } }
 
-                for(item in viewModel.state.value.listOfBirds){
-                    mGoogleMap?.addMarker(MarkerOptions()
-                    .position(LatLng(item.lat, item.lng))
-                    .title("Birds"))
-                }
 
                 marker.title = "$add"
                 marker.snippet = "$id"
@@ -82,6 +80,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         mapFragment.getMapAsync(this)
+
+        viewModel.state.observe(this) { state ->
+            mGoogleMap?.clear() // Clear existing markers if needed
+            for (item in state.listOfBirds) {
+                mGoogleMap?.addMarker(MarkerOptions()
+                    .position(LatLng(item.lat, item.lng))
+                    .title(item.locName))
+            }
+        }
 
         val mapOptionButton: ImageButton = findViewById(R.id.mapOptionsMenu)
 
