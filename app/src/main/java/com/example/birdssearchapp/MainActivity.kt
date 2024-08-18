@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CustomCap
+import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -79,6 +81,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         })
 
+
         mapFragment.getMapAsync(this)
 
         viewModel.state.observe(this) { state ->
@@ -87,7 +90,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 mGoogleMap?.addMarker(MarkerOptions()
                     .position(LatLng(item.lat, item.lng))
                     .title(item.locName))
+                    ?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.bird))
             }
+
+            //Add draggable marker
+            mGoogleMap?.addMarker(MarkerOptions()
+                .position(LatLng(-26.20, 28.04))
+                .title("Draggable Marker")
+                .draggable(true)
+            )
         }
 
         val mapOptionButton: ImageButton = findViewById(R.id.mapOptionsMenu)
@@ -98,7 +109,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         popupMenu.setOnMenuItemClickListener {menuItem ->
             changeMap(menuItem.itemId)
-
             true
         }
 
@@ -137,12 +147,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .title("Marker")
         )
 
-        //Add draggable marker
-        mGoogleMap?.addMarker(MarkerOptions()
-            .position(LatLng(13.234, 12.543))
-            .title("Draggable Marker")
-            .draggable(true)
-        )
+
 
         //custom markker
 //        mGoogleMap?.addMarker(MarkerOptions()
@@ -169,7 +174,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
+    //drawing polylines on google maps
+    private  fun drawLines() {
+        val polyline = mGoogleMap?.addPolyline(PolylineOptions()
+            .clickable(true)
+            .add(
+                LatLng(-26.20, 28.04),
+                LatLng(-29.12, 26.21),
+                LatLng(-26.20, 28.04),
+            )
+            .endCap(RoundCap())
+            .startCap(CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.menu_bar)))
+            .color(ContextCompat.getColor(this, R.color.blue))
+            .jointType(JointType.ROUND)
+            .width(12f)
 
+        )
+    }
 
 
 }
